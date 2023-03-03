@@ -3,6 +3,7 @@ import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {map} from 'rxjs/operators';
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
+import { AppState } from './reducers';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,13 @@ export class AppComponent implements OnInit {
 
     loading = true;
 
-    constructor(private router: Router) {
+    constructor(private _router: Router, private _store: Store<AppState>) {
 
     }
 
     ngOnInit() {
 
-      this.router.events.subscribe(event  => {
+      this._router.events.subscribe(event  => {
         switch (true) {
           case event instanceof NavigationStart: {
             this.loading = true;
@@ -36,6 +37,10 @@ export class AppComponent implements OnInit {
             break;
           }
         }
+      });
+
+      this._store.subscribe((state) => {
+        console.log('state:', state);
       });
 
     }

@@ -3,6 +3,12 @@ export const USERS = {
     id: 1,
     email: 'test@angular-university.io',
     password: 'test'
+  },
+  
+  2: {
+    id: 2,
+    email: 'coffeemetalcode@gmail.com',
+    password: '123456c'
   }
 
 };
