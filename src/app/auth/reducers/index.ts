@@ -18,6 +18,10 @@ export const initialAuthState: AuthState = {
 export const authReducer = createReducer(
   initialAuthState,
   on(AuthActions.login, (state, action) => {
+
+    /* state.user = action.user;
+
+    return state; */ // store should not be mutateable -- implement strictStateImmutability: true in runtimeChecks
     
     return {
       user: action.user
