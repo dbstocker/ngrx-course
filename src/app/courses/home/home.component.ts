@@ -5,7 +5,9 @@ import {defaultDialogConfig} from '../shared/default-dialog-config';
 import {EditCourseDialogComponent} from '../edit-course-dialog/edit-course-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import {map, shareReplay} from 'rxjs/operators';
-import {CoursesHttpService} from '../services/courses-http.service';
+import { AppState } from '../../reducers';
+import { Store, select } from '@ngrx/store';
+import { selectAdvancedCourses, selectBeginnerCourses, selectPromoTotal } from '../courses.selectors';
 
 
 
@@ -27,7 +29,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
       private dialog: MatDialog,
-      private coursesHttpService: CoursesHttpService) {
+      private _store: Store<AppState>) {
 
     }
 
@@ -36,31 +38,34 @@ export class HomeComponent implements OnInit {
     }
 
   reload() {
+    /* const courses$ = this.coursesHttpService.findAllCourses().pipe(
+      map((courses) => courses.sort(compareCourses)),
+      shareReplay()
+    );
 
-    const courses$ = this.coursesHttpService.findAllCourses()
-      .pipe(
-        map(courses => courses.sort(compareCourses)),
-        shareReplay()
-      );
+    this.loading$ = courses$.pipe(map((courses) => !!courses));
 
-    this.loading$ = courses$.pipe(map(courses => !!courses));
+    this.beginnerCourses$ = courses$.pipe(
+      map((courses) =>
+        courses.filter((course) => course.category == "BEGINNER")
+      )
+    );
 
-    this.beginnerCourses$ = courses$
-      .pipe(
-        map(courses => courses.filter(course => course.category == 'BEGINNER'))
-      );
+    this.advancedCourses$ = courses$.pipe(
+      map((courses) =>
+        courses.filter((course) => course.category == "ADVANCED")
+      )
+    );
 
+    this.promoTotal$ = courses$.pipe(
+      map((courses) => courses.filter((course) => course.promo).length)
+    ); */
 
-    this.advancedCourses$ = courses$
-      .pipe(
-        map(courses => courses.filter(course => course.category == 'ADVANCED'))
-      );
+    this.beginnerCourses$ = this._store.pipe(select(selectBeginnerCourses));
 
-    this.promoTotal$ = courses$
-        .pipe(
-            map(courses => courses.filter(course => course.promo).length)
-        );
+    this.advancedCourses$ = this._store.pipe(select(selectAdvancedCourses));
 
+    this.promoTotal$ = this._store.pipe(select(selectPromoTotal));
   }
 
   onAddCourse() {
